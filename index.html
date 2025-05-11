@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock paper and Scissor</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="roundOverMsg">
+        <div class="endScore">
+            <h2>Score :</h2>
+            <div class="user">
+                <span>User :</span>
+                <span class="userEndScore">0</span>
+            </div>
+            <div class="computer">
+                <span>Computer :</span>
+                <span class="computerEndScore">0</span>
+            </div>
+        </div>
+        <div class="endMsgContainer">
+            <p class="endMsg"></p>
+        </div>
+        <div class="navigation">
+            <button class="play-again">Play Again</button>
+            <button class="select-round-again">Select Round</button>
+            <button class="exit">Exit</button>
+        </div>
+    </div>
+    <div class="quit">
+        <i class="ri-close-large-line"></i>
+        <p>Do you want to Exit the game ?</p>
+        <div class="buttons">
+            <button class="yes">
+                Yes 🥹
+            </button>
+            <button class="no">
+                No 😀
+            </button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="main-interface">
+            <div class="main-screen">
+                <div class="container">
+                    <h1>Rock</h1>
+                    <img src="./images/fist.png" alt="Rock_hand">
+                </div>
+                <div class="container">
+                    <img src="./images/hand-paper.png" alt="Paper_hand">
+                    <h1>Paper</h1>
+                </div>
+                <div class="container">
+                    <h1>Scissor</h1>
+                    <img src="./images/victory.png" alt="Scissor_hand">
+                </div>
+                <div class="start-bdr">
+                    <button class="start">Start</button>
+                </div>
+            </div>
+            <div class="round-selection">
+                <h2>Select how many rounds you want to play</h2>
+                <div class="round-selection-container">
+                    <div class="selection-card" data-round="1">
+                        <img src="./images/rock-paper-scissors_6831872.png" alt="selection-card_image">
+                        <h2>1</h2>
+                        <h4>Rounds</h4>
+                    </div>
+                    <div class="selection-card" data-round="7">
+                        <img src="./images/rock-paper-scissors_6831872.png" alt="selection-card_image">
+                        <h2>7</h2>
+                        <h4>Rounds</h4>
+                    </div>
+                    <div class="selection-card" data-round="15">
+                        <img src="./images/rock-paper-scissors_6831872.png" alt="selection-card_image">
+                        <h2>15</h2>
+                        <h4>Rounds</h4>
+                    </div>
+                    <div class="selection-card" data-round="100">
+                        <img src="./images/rock-paper-scissors_6831872.png" alt="selection-card_image">
+                        <h2>100</h2>
+                        <h4>Rounds</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="game-area">
+                <div class="game-selection">
+                    <div class="game-selection-container">
+                        <div class="score">
+                            <h2>Score :</h2>
+                            <div class="user">
+                                <span>User :</span>
+                                <span class="user-score">0</span>
+                            </div>
+                            <div class="computer">
+                                <span>Computer :</span>
+                                <span class="computer-score">0</span>
+                            </div>
+                        </div>
+                        <div class="select-btn">
+                            <h2>Select :</h2>
+                            <h3 class="Rock">
+                                Rock
+                            </h3>
+                            <h3 class="Paper">
+                                Papper
+                            </h3>
+                            <h3 class="Scissor">
+                                Scissor
+                            </h3>
+                        </div>
+                        <h3 class="play">Play</button>
+                    </div>
+                </div>
+                <div class="game-screen">
+                    <div class="round">
+                        <h2>
+                            <span class="running">1</span>
+                            <span>/</span>
+                            <span class="total-round">5</span>
+                            <br>
+                            <span class="label">Round</span>
+                        </h2>
+                    </div>
+                    <div class="play-image">
+                        <div class="user-image">
+                            <!-- Through javascript -->
+                        </div>
+                        <div class="computer-image">
+                            <!-- Through javascript -->
+                        </div>
+                    </div>
+                    <div class="msg-bdr">
+                        <p class="msg">Select which hand you want to play</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+
+</html>
