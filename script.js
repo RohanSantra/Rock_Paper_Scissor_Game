@@ -1,255 +1,242 @@
-// ---- Declare everything ONCE at the top ----
-const mainScreen = document.querySelector(".main-screen");
-const RoundSelection = document.querySelector(".round-selection");
-const gameArea = document.querySelector(".game-area");
-const Quit = document.querySelector(".quit");
-const quitIcon = document.querySelector('.ri-close-large-line');
-const yesBtn = document.querySelector('.yes');
-const noBtn = document.querySelector('.no');
-const userScoreEl = document.querySelector('.user-score');
-const computerScoreEl = document.querySelector('.computer-score');
-const runningRoundEl = document.querySelector('.running');
-const computerChoiceImg = document.querySelector(".play-image .computer-image");
-const userChoiceImg = document.querySelector(".play-image .user-image");
-const msgEl = document.querySelector(".msg");
-const playBtn = document.querySelector(".play");
-const overlay = document.querySelector(".overlay");
-const roundOverMsg = document.querySelector(".roundOverMsg");
-const roundWinMsg = document.querySelector(".roundWinMsg");
-const roundLoseMsg = document.querySelector(".roundLoseMsg");
-const endMsg = document.querySelector(".endMsg");
-const userEndScore = document.querySelector(".userEndScore");
-const computerEndScore = document.querySelector(".computerEndScore");
-const playAgain = document.querySelector(".play-again");
-const totalRoundEl = document.querySelector(".total-round");
-const selectRoundAgain = document.querySelector(".select-round-again");
-const exit = document.querySelector(".exit");
-
-const Choices = document.querySelectorAll(".select-btn h3");
-
+// ==== Game State Variables ====
 let userScore = 0;
 let computerScore = 0;
 let roundCount = 1;
 let totalRounds = 0;
 let userChoice = null;
 
-// ---- Utility Functions ----
+const CHOICES = ['rock', 'paper', 'scissor'];
+const WIN_MAP = {
+    rock: 'scissor',
+    paper: 'rock',
+    scissor: 'paper'
+};
+
+// ==== DOM Elements ====
+const el = {
+    mainScreen: document.querySelector(".main-screen"),
+    roundSelection: document.querySelector(".round-selection"),
+    gameArea: document.querySelector(".game-area"),
+    quitMenu: document.querySelector(".quit"),
+    overlay: document.querySelector(".overlay"),
+    warningMsg: document.querySelector(".warningMsg"),
+    roundOverMsg: document.querySelector(".roundOverMsg"),
+    endMsg: document.querySelector(".endMsg"),
+    userEndScore: document.querySelector(".userEndScore"),
+    computerEndScore: document.querySelector(".computerEndScore"),
+    userScoreEl: document.querySelector(".user-score"),
+    computerScoreEl: document.querySelector(".computer-score"),
+    runningRoundEl: document.querySelector(".running"),
+    userChoiceImg: document.querySelector(".play-image .user-image"),
+    computerChoiceImg: document.querySelector(".play-image .computer-image"),
+    msgEl: document.querySelector(".msg"),
+    totalRoundEl: document.querySelector(".total-round"),
+
+    // Buttons
+    playBtn: document.querySelector(".play"),
+    playAgainBtn: document.querySelector(".play-again"),
+    selectRoundAgainBtn: document.querySelector(".select-round-again"),
+    exitBtn: document.querySelector(".exit"),
+    quitIcon: document.querySelector(".quitIcon"),
+    yesBtn: document.querySelector(".yes"),
+    noBtn: document.querySelector(".no"),
+    warningMsgCloseIcon: document.querySelector(".warningMsgcloseIcon"),
+
+    // Choice buttons
+    choiceButtons: document.querySelectorAll(".select-btn h3"),
+    roundCards: document.querySelectorAll(".selection-card")
+};
+
+// ==== Utility Functions ====
+function show(elm) {
+    elm.classList.add('display');
+}
+
+function hide(elm) {
+    elm.classList.remove('display');
+}
+
 function computerChoiceGenerator() {
-    const choices = ['rock', 'paper', 'scissor'];
-    const randIdx = Math.floor(Math.random() * choices.length);
-    return choices[randIdx];
+    const idx = Math.floor(Math.random() * CHOICES.length);
+    return CHOICES[idx];
 }
 
 function handleDraw() {
-    msgEl.innerHTML = `It's a Draw`;
-    msgEl.style.backgroundColor = "#BFCBC2";
-    msgEl.parentElement.style.borderColor = "#BFCBC2";
+    updateMessage(`It's a Draw`, "#BFCBC2");
 }
 
-function quitGame() {
-    if (gameArea.style.display === 'flex' && getComputedStyle(roundOverMsg).display === 'none') {
-        Quit.classList.toggle('display');
-        overlay.classList.toggle('display');
-
-    }
+function updateMessage(text, color) {
+    el.msgEl.innerHTML = text;
+    el.msgEl.style.backgroundColor = color;
+    el.msgEl.parentElement.style.borderColor = color;
 }
 
 function handleMsg(userWin, userChoice, computerChoice) {
-    if (userWin) {
-        msgEl.innerHTML = `You Win !!! ${userChoice.toUpperCase()} beats ${computerChoice.toUpperCase()}`;
-        msgEl.style.backgroundColor = "#8ac926";
-        msgEl.parentElement.style.borderColor = "#8ac926";
-    } else {
-        msgEl.innerHTML = `You Lose !!! ${userChoice.toUpperCase()} loses to ${computerChoice.toUpperCase()}`;
-        msgEl.style.backgroundColor = "#f94144";
-        msgEl.parentElement.style.borderColor = "#f94144";
-    }
+    const message = userWin
+        ? `You Win !!! ${userChoice.toUpperCase()} beats ${computerChoice.toUpperCase()}`
+        : `You Lose !!! ${userChoice.toUpperCase()} loses to ${computerChoice.toUpperCase()}`;
+    const color = userWin ? "#8ac926" : "#f94144";
+    updateMessage(message, color);
 }
 
 function updateScore(userWin) {
     if (userWin) {
         userScore++;
-        userScoreEl.innerHTML = userScore;
+        el.userScoreEl.innerHTML = userScore;
     } else {
         computerScore++;
-        computerScoreEl.innerHTML = computerScore;
+        el.computerScoreEl.innerHTML = computerScore;
     }
 }
 
-function showRoundOver() {
-    overlay.classList.add('display')
-    roundOverMsg.style.display = "flex";
-    userEndScore.innerHTML = userScore;
-    computerEndScore.innerHTML = computerScore;
-
-    if (userScore > computerScore) {
-        roundOverMsg.classList.add('roundWinMsg');
-        roundOverMsg.classList.remove('roundLoseMsg');
-        endMsg.innerHTML = "Congratulation!!! You Won 😀😀😀";
-    } else {
-        roundOverMsg.classList.remove('roundWinMsg');
-        roundOverMsg.classList.add('roundLoseMsg');
-        endMsg.innerHTML = "Unfortunatly, You Lose 😭😭😭";
-
-    }
-}
-
-// ---- Core Game Logic ----
-function checkResult() {
-    if (!userChoice) {
-        alert("Please select Rock, Paper, or Scissor before playing!");
-        return;
-    }
-
-    const computerChoice = computerChoiceGenerator();
-    computerChoiceImg.innerHTML = `<img src="./images/${computerChoice}.png">`;
-
-    let userWin = false;
-
-    if (userChoice === computerChoice) {
-        handleDraw();
-    } else {
-        if (userChoice === 'rock') userWin = (computerChoice === 'scissor');
-        else if (userChoice === 'paper') userWin = (computerChoice === 'rock');
-        else if (userChoice === 'scissor') userWin = (computerChoice === 'paper');
-        roundCount++;
-        runningRoundEl.innerHTML = roundCount;
-        handleMsg(userWin, userChoice, computerChoice);
-        updateScore(userWin);
-    }
-
-    if ((roundCount - 1) === totalRounds) {
-        runningRoundEl.innerHTML = roundCount - 1;
-        showRoundOver();
-    }
-}
-
-// ---- Reset Game ----
 function resetGame() {
     userScore = 0;
     computerScore = 0;
     roundCount = 1;
     userChoice = null;
 
-    userScoreEl.innerHTML = userScore;
-    computerScoreEl.innerHTML = computerScore;
-    runningRoundEl.innerHTML = roundCount;
-    userChoiceImg.innerHTML = '';
-    computerChoiceImg.innerHTML = '';
-
-    msgEl.innerHTML = "Select which hand you want to play";
-    msgEl.style.backgroundColor = "#BFCBC2";
-    msgEl.parentElement.style.borderColor = "#BFCBC2";
+    el.userScoreEl.innerHTML = 0;
+    el.computerScoreEl.innerHTML = 0;
+    el.runningRoundEl.innerHTML = 1;
+    el.userChoiceImg.innerHTML = '';
+    el.computerChoiceImg.innerHTML = '';
+    updateMessage("Select which hand you want to play", "#BFCBC2");
 }
 
-// ---- Setup Once ----
+function showRoundOver() {
+    show(el.overlay);
+    el.roundOverMsg.style.display = "flex";
+    el.userEndScore.innerHTML = userScore;
+    el.computerEndScore.innerHTML = computerScore;
 
+    const userWon = userScore > computerScore;
+    el.roundOverMsg.classList.toggle('roundWinMsg', userWon);
+    el.roundOverMsg.classList.toggle('roundLoseMsg', !userWon);
+    el.endMsg.innerHTML = userWon ? "Congratulation!!! You Won 😀😀😀" : "Unfortunately, You Lose 😭😭😭";
+}
 
+function quitGame() {
+    if (getComputedStyle(el.gameArea).display === 'flex' && getComputedStyle(el.roundOverMsg).display === 'none') {
+        el.quitMenu.classList.toggle('display');
+        el.overlay.classList.toggle('display');
+    }
+}
+
+// ==== Core Logic ====
+function checkResult() {
+    if (!userChoice) return show(el.warningMsg), show(el.overlay);
+
+    const computerChoice = computerChoiceGenerator();
+    el.computerChoiceImg.innerHTML = `<img src="./images/${computerChoice}.png">`;
+
+    let userWin = false;
+    if (userChoice === computerChoice) {
+        handleDraw();
+    } else {
+        userWin = WIN_MAP[userChoice] === computerChoice;
+        roundCount++;
+        el.runningRoundEl.innerHTML = roundCount;
+        handleMsg(userWin, userChoice, computerChoice);
+        updateScore(userWin);
+    }
+
+    if (roundCount - 1 === totalRounds) {
+        el.runningRoundEl.innerHTML = roundCount - 1;
+        showRoundOver();
+    }
+}
+
+// ==== Setup Functions ====
 function setupGame() {
-    // Choice buttons
-    Choices.forEach(choice => {
-        choice.addEventListener('click', () => {
-            userChoice = choice.className.toLowerCase();
-            computerChoiceImg.innerHTML = '';
-            userChoiceImg.innerHTML = `<img src="./images/${userChoice}.png">`;
+    el.choiceButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            userChoice = btn.className.toLowerCase();
+            el.userChoiceImg.innerHTML = `<img src="./images/${userChoice}.png">`;
+            el.computerChoiceImg.innerHTML = '';
         });
     });
 
-    // Play button
-    playBtn.addEventListener("click", () => {
-        checkResult();
-    });
+    el.playBtn.addEventListener("click", checkResult);
 
-    // Play Again button
-    playAgain.addEventListener("click", () => {
-        overlay.classList.remove('display');
-        roundOverMsg.style.display = "none";
+    el.playAgainBtn.addEventListener("click", () => {
+        hide(el.overlay);
+        el.roundOverMsg.style.display = "none";
         resetGame();
     });
 
-    //Select round button
-    selectRoundAgain.addEventListener('click', () => {
-        overlay.classList.remove('display');
-        roundOverMsg.style.display = "none";
-        gameArea.style.display = "none";
-        RoundSelection.style.display = "flex";
+    el.selectRoundAgainBtn.addEventListener("click", () => {
+        hide(el.overlay);
+        el.roundOverMsg.style.display = "none";
+        el.gameArea.style.display = "none";
+        el.roundSelection.style.display = "flex";
     });
 
-    //Exit button
-    exit.addEventListener("click", () => {
-        overlay.classList.remove('display');
-        roundOverMsg.style.display = "none";
-        gameArea.style.display = "none";
-        mainScreen.style.display = "flex";
+    el.exitBtn.addEventListener("click", () => {
+        hide(el.overlay);
+        el.roundOverMsg.style.display = "none";
+        el.gameArea.style.display = "none";
+        el.mainScreen.style.display = "flex";
     });
 
-    // ESC key to quit game
-    window.addEventListener('keydown', (e) => {
+    el.quitIcon.addEventListener("click", quitGame);
+    el.yesBtn.addEventListener("click", () => {
+        hide(el.overlay);
+        hide(el.quitMenu);
+        el.gameArea.style.display = "none";
+        el.mainScreen.style.display = "flex";
+    });
+    el.noBtn.addEventListener("click", () => {
+        hide(el.overlay);
+        hide(el.quitMenu);
+    });
+
+    el.warningMsgCloseIcon.addEventListener("click", () => {
+        hide(el.overlay);
+        hide(el.warningMsg);
+    });
+
+    // ESC key
+    window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
-            quitGame();
+            if (getComputedStyle(el.quitMenu).display === 'none' && getComputedStyle(el.warningMsg).display === 'none') {
+                quitGame();
+            }
+            else if (getComputedStyle(el.warningMsg).display === 'flex') {
+                hide(el.warningMsg);
+                hide(el.overlay);
+            }
         }
     });
 
-    //close button on quit menu
-    quitIcon.addEventListener('click', () => {
-        quitGame();
-    })
-
-    //Yes button on quit menu
-    yesBtn.addEventListener('click', () => {
-        overlay.classList.remove('display');
-        Quit.classList.remove('display')
-        gameArea.style.display = "none";
-        mainScreen.style.display = "flex";
-    });
-
-    //No button on quit menu
-    noBtn.addEventListener('click', () => {
-        overlay.classList.remove('display');
-        Quit.classList.remove('display');
-    })
-
-    //triggering exit menu when going back in phone or browser
+    // Phone/browser back button
     window.history.pushState({ page: 1 }, "", "");
-    window.addEventListener('popstate', function (event) {
-        // console.log(
-        //     `location: ${document.location}, state: ${JSON.stringify(event.state)}`,
-        // );
+    window.addEventListener("popstate", () => {
         quitGame();
         window.history.pushState({ page: 1 }, "", "");
     });
-
 }
 
-
-
-// ---- Game Flow ----
 function selectRound() {
-    const rounds = document.querySelectorAll(".selection-card");
-
-    rounds.forEach(roundCard => {
-        roundCard.addEventListener("click", function () {
-            RoundSelection.style.display = "none";
-            gameArea.style.display = "flex";
-            totalRounds = Number(roundCard.dataset.round);
-            totalRoundEl.innerHTML = totalRounds;
+    el.roundCards.forEach(card => {
+        card.addEventListener("click", () => {
+            el.roundSelection.style.display = "none";
+            el.gameArea.style.display = "flex";
+            totalRounds = Number(card.dataset.round);
+            el.totalRoundEl.innerHTML = totalRounds;
             resetGame();
         });
     });
 }
 
 function startGame() {
-    const start = document.querySelector(".start");
-    start.addEventListener("click", function () {
-        mainScreen.style.display = "none";
-        RoundSelection.style.display = "flex";
+    const startBtn = document.querySelector(".start");
+    startBtn.addEventListener("click", () => {
+        el.mainScreen.style.display = "none";
+        el.roundSelection.style.display = "flex";
     });
-
     selectRound();
 }
 
-
-
-// ---- Initialize ----
+// ==== Initialize Game ====
 setupGame();
 startGame();

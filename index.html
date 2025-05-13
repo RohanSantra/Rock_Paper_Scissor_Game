@@ -33,7 +33,7 @@
         </div>
     </div>
     <div class="quit">
-        <i class="ri-close-large-line"></i>
+        <i class="ri-close-large-line quitIcon"></i>
         <p>Do you want to Exit the game ?</p>
         <div class="buttons">
             <button class="yes">
@@ -43,6 +43,11 @@
                 No 😀
             </button>
         </div>
+    </div>
+
+    <div class="warningMsg">
+        <i class="ri-close-large-line warningMsgcloseIcon"></i>
+        <p>Please select Rock✊, Paper🖐️, or Scissor✌️ before playing!</p>
     </div>
 
     <div class="main">
@@ -67,9 +72,9 @@
             <div class="round-selection">
                 <h2>Select how many rounds you want to play</h2>
                 <div class="round-selection-container">
-                    <div class="selection-card" data-round="1">
+                    <div class="selection-card" data-round="5">
                         <img src="./images/rock-paper-scissors_6831872.png" alt="selection-card_image">
-                        <h2>1</h2>
+                        <h2>5</h2>
                         <h4>Rounds</h4>
                     </div>
                     <div class="selection-card" data-round="7">
@@ -121,9 +126,9 @@
                 <div class="game-screen">
                     <div class="round">
                         <h2>
-                            <span class="running">1</span>
+                            <span class="running"></span>
                             <span>/</span>
-                            <span class="total-round">5</span>
+                            <span class="total-round"></span>
                             <br>
                             <span class="label">Round</span>
                         </h2>
