@@ -124,7 +124,11 @@ function quitGame() {
 
 // ==== Core Logic ====
 function checkResult() {
-    if (!userChoice) return show(el.warningMsg), show(el.overlay);
+    if (!userChoice) {
+        show(el.warningMsg);
+        show(el.overlay);
+        return
+    }
 
     const computerChoice = computerChoiceGenerator();
     el.computerChoiceImg.innerHTML = `<img src="./images/${computerChoice}.png">`;
@@ -139,6 +143,8 @@ function checkResult() {
         handleMsg(userWin, userChoice, computerChoice);
         updateScore(userWin);
     }
+
+    userChoice = null;
 
     if (roundCount - 1 === totalRounds) {
         el.runningRoundEl.innerHTML = roundCount - 1;

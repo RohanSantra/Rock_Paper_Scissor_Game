@@ -166,7 +166,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #DF362D;
+    background-color: lightseagreen;
     border: 3px solid #212121;
     border-radius: 20px;
     display: none;
